@@ -40,10 +40,17 @@ function insert_text_changed() {
             $.ajax({    url: "/insert_http",
                         data: "url="+encodeURIComponent("https://www.youtube.com/watch?v="+query),
                         dataType: "html",
-                        success: partywin("New video inserted"),
+                        beforeSend: function(jqXHR, settings) {
+                            $('#insert_wait').show();
+                        },
                         error: function(XMLHttpRequest, textStatus, errorThrown) { 
                             partyfail("Status: " + textStatus + " <br/> "+"Error: " + errorThrown);
-                        }
+                        },
+                        complete: function ( jqXHR, textStatus ) {
+                            partywin("New video inserted");
+                            $('#insert_wait').hide();
+                            $('insert').val('');
+                        },
         });
         }
     }

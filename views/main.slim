@@ -15,10 +15,12 @@ html
             div id="h_insert" style="width:40%"
                 | Insert videos: &nbsp;
                 input id="insert" type="text"
+                img src="/pic/loading2_thumb.gif" style="display:none" id="insert_wait"
 
         div id="result"
 
         javascript:
+            $('#insert_wait').hide();
             $(document).on('change keyup','#search', search_text_changed );
             $('#insert').keypress(function(event){
                 var keycode = (event.keyCode ? event.keyCode : event.which);
