@@ -23,7 +23,8 @@ end
 get '/lookup' do
     query=@params[:query]
     if query =~/^([a-zA-Z0-9\-_]{1,20})$/
-        ytresults = get_yts_by_search($1,@page)
+        @results=@dbh.search($1)
+        slim :results
     end
 end
 
@@ -33,13 +34,13 @@ get '/insert_http' do
     if res[:status]!=0
         status 500
     else
-        Videos.reindex()
+        Videos.reindex(@dbh)
         status 200
     end
     res[:message]
 end
 
 get '/reindex' do
-    Video.reindex()
+    Video.reindex(@dbh)
 end
 

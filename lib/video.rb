@@ -8,20 +8,24 @@ module Video
     require "taglib"
     require "db.rb"
 
-    def Video.reindex()
-        Dir.glob(FIle.join(CONFIG[:ytdldestdir],"*.mp4")).each do |f|
+    def Video.reindex(dbh)
+        dbh.truncate()
+        count=0
+        Dir.glob(File.join(CONFIG[:ytdldestdir],"*.mp4")).each do |f|
             infos={}
-            infos[:file]=f
+            infos[:file]=File.basename(f)
             if f=~/-([a-zA-Z0-9_-]{11})\.mp4/
                 infos[:yid] = $1
             end
             TagLib::MP4::File.open(f) do |mp4|
                 break unless mp4.tag
                 infos[:title]=mp4.tag.title 
-                infos[:description] = mp4.item_list_map["\xC2\xA9cmt"]
+                infos[:description] = mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0]
             end
-            add_video(infos)
+            count+=1
+            dbh.add_video(infos)
         end
+        return "Reindexed <#{count}> videos"
     end
 
 
@@ -43,5 +47,6 @@ module Video
         res[:status] = $?
         Dir.chdir(prev)
         return res
+
     end
 end
