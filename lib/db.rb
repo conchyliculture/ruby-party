@@ -4,15 +4,15 @@ class PartyDB
 
     def initialize(config) # config is a hash
         @dbh = DBI.connect(config[:dsn])
-        @dbh.do("set option charset utf8;")
+#        @dbh.do("set option charset utf8;")
         @dbh.do("CREATE TABLE IF NOT EXISTS infos (
-                    `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+                    `id` INTEGER PRIMARY KEY ,
                     `yid` VARCHAR( 11 ),
-                    `title` VARCHAR( 255 )  CHARACTER SET utf8 ,
-                    `file`   varchar(255) CHARACTER SET utf8 ,
-                    `description` varchar(255) CHARACTER SET utf8,
-                    `comment` varchar(255) CHARACTER SET utf8,
-
+                    `title` VARCHAR( 255 ) ,
+                    `file`   varchar(255) ,
+                    `description` varchar(255) ,
+                    `comment` varchar(255)
+                    )
         ")
     end
 
@@ -25,6 +25,26 @@ class PartyDB
                 infos[:comment],
         )
     end
+
+    def truncate()
+        @dbh.do("DELETE FROM infos")
+    end
+
+    def search(q)
+        res=[]
+        @dbh.select_all("SELECT id,yid,title,file,description,comment FROM infos WHERE title LIKE ?","%#{q}%").each do |row|
+            res << {
+                :id => row[0],
+                :yid => row[1],
+                :title => row[2],
+                :file => "/videos/"+row[3],
+                :description => row[4],
+                :comment => row[5],
+            }
+        end
+        res
+    end
+
 
 #    def import_from_ytfacts(dsn)
 #        dbh = Sequel.connect("mysql://ytdluser:ytdlpass@10.0.3.10/youtube_dl")
