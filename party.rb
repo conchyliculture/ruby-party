@@ -9,6 +9,13 @@ require "config.rb"
 require "db.rb"
 require "video.rb"
 
+
+def search(query)
+    @dbh.search(query).map{ |v|
+        v.merge({:cover => "data:image/jpeg;base64,"+Video.cover_to_b64(v[:file])})
+    }
+end
+
 set :bind, '0.0.0.0'
 
 before  do
@@ -23,7 +30,7 @@ end
 get '/lookup' do
     query=@params[:query]
     if query =~/^([a-zA-Z0-9\-_]{1,20})$/
-        @results=@dbh.search($1)
+        @results=search($1)
         slim :results
     end
 end

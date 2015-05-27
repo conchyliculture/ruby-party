@@ -37,7 +37,7 @@ class PartyDB
                 :id => row[0],
                 :yid => row[1],
                 :title => row[2],
-                :file => "/videos/"+row[3],
+                :file => row[3],
                 :description => row[4],
                 :comment => row[5],
             }
