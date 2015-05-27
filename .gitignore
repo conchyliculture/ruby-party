@@ -1,0 +1,4 @@
+*.swp
+*.sqlite
+lib/taglib*
+*.mp4

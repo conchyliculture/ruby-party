@@ -1,0 +1,27 @@
+doctype html
+html
+    head
+        script src="/js/jquery-2.1.4.js"
+        script src="/js/party.js"
+        title Instant party video finder
+        javascript:
+    body style="width:75%;margin:0 auto"
+        div id="header"
+            div id="title" style="width:100%"
+                | <h1>Party Time !</h1>
+            div id="h_search" style="width:40%;float:left" 
+                | Search videos: &nbsp;
+                input id="search" type="text"
+            div id="h_insert" style="width:40%"
+                | Insert videos: &nbsp;
+                input id="insert" type="text"
+
+        div id="result"
+
+        javascript:
+            $(document).on('change keyup','#search', search_text_changed );
+            $('#insert').keypress(function(event){
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if(keycode == '13'){
+                insert_text_changed();
+                }});
