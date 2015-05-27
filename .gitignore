@@ -1,5 +1,4 @@
 *.swp
 *.sqlite
-config.rb
 lib/taglib*
 *.mp4
