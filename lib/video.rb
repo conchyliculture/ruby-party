@@ -11,7 +11,7 @@ module Video
 
     def Video.cover_to_b64(file)
         $stderr.puts File.join(CONFIG[:ytdldestdir],file)
-        res=""
+        res=nil
         TagLib::MP4::File.open(File.join(CONFIG[:ytdldestdir],file)) do |mp4|
             break unless mp4.tag
             c = mp4.tag.item_list_map['covr']
@@ -20,7 +20,7 @@ module Video
                 cover_art = cover_art_list.first
                 cover_art.format
                 cover_art.format == TagLib::MP4::CoverArt::JPEG
-                res << Base64.encode64(cover_art.data)
+                res = Base64.encode64(cover_art.data)
             end
         end
         return res

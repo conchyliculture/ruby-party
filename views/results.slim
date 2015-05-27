@@ -1,4 +1,5 @@
 -@results.each do |res|
     p class="result"
-        img src="#{res[:cover]}"  height="64"
+        -if res.has_key?(:cover)
+            img src="#{res[:cover]}"  height="64"
         a href="/videos/#{res[:file]}" #{res[:title]} 

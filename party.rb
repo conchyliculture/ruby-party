@@ -12,7 +12,14 @@ require "video.rb"
 
 def search(query)
     @dbh.search(query).map{ |v|
-        v.merge({:cover => "data:image/jpeg;base64,"+Video.cover_to_b64(v[:file])})
+        cover = Video.cover_to_b64(v[:file])
+        if cover
+            $stderr.puts v[:file]+" has cover"
+            v.merge({:cover => "data:image/jpeg;base64,"+cover})
+        else
+            $stderr.puts v[:file]+" has no cover"
+            v
+        end
     }
 end
 
