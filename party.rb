@@ -34,7 +34,7 @@ get '/insert_http' do
     if res[:status]!=0
         status 500
     else
-        Videos.reindex(@dbh)
+        Video.reindex(@dbh)
         status 200
     end
     res[:message]
