@@ -1,9 +1,42 @@
+
 function partyfail(msg) {
     $('#results').html("<font color='red'>"+msg+"</font>");
+}
+// /pushpl?id=#{res[:id]
+
+function push_to_playlist(id) {
+    $.ajax({ url: "/pushpl",
+            data: "id="+id ,
+            dataType: "html",
+            complete: function(jqXHR,textStatus) {
+                if (textStatus == "success") {
+                    toastr.options.timeOut = 1500;
+                    toastr.success("Video successfully added to playlist");
+                }
+                else if (textStatus == "error") {
+                    partyfail("Status: " + textStatus + " <br/> "+"Error: " + jqXHR.responseText);
+                } else {
+                    console.log("status "+textStatus);
+                }
+            },
+    });
+
 }
 
 function search_text_changed() {
     var query = document.getElementById("search").value;
+    if (query.length == 0) {
+        $.ajax({ url: "/get10",
+                dataType: "html",
+                success: function(data) {
+                    $('#results').html(data);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                    partyfail("Status: " + textStatus + " <br/> "+"Error: " + XMLHttpRequest.responseText);
+                }
+        });
+    }
+
     if ( query.length >= 2 ){
         $.ajax({ url: "/lookup",
                 data: "query="+query ,

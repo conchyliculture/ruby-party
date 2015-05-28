@@ -6,7 +6,7 @@
         div class="link_title"
             | #{res[:title]} <a href="/videos/#{res[:file]}">(Download file)</a>
         div class="push_pl"
-            a href="/pushpl?id=#{res[:id]}" Add to local vlc playlist
+             button type="button" onclick="push_to_playlist(#{res[:id]})" Push to current Playlist
         div class="edit"
             a href="/editinfo?id=#{res[:id]}" Edit info
         div class="bottom"
