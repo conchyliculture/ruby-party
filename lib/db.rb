@@ -45,6 +45,11 @@ class PartyDB
         res
     end
 
+    def get_file_from_id(id)
+        res=@dbh.select_one("SELECT file FROM infos WHERE id = ?",id)
+        return res[0]
+    end
+
 
 #    def import_from_ytfacts(dsn)
 #        dbh = Sequel.connect("mysql://ytdluser:ytdlpass@10.0.3.10/youtube_dl")

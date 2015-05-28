@@ -3,21 +3,25 @@ html
     head
         script src="/js/jquery-2.1.4.js"
         script src="/js/party.js"
+        script src="/js/toastr.js"
+
+        link type="text/css" href="/css/party.css" rel="stylesheet"
+        link href="/css/toastr.css" rel="stylesheet"
         title Instant party video finder
         javascript:
-    body style="width:75%;margin:0 auto"
-        div id="header"
-            div id="title" style="width:100%"
+    body 
+        div class="header"
+            div id="title"
                 | <h1>Party Time !</h1>
-            div id="h_search" style="width:40%;float:left" 
+            div id="h_search"
                 | Search videos: &nbsp;
                 input id="search" type="text"
-            div id="h_insert" style="width:40%"
+            div id="h_insert"
                 | Insert videos: &nbsp;
                 input id="insert" type="text"
-                img src="/pic/loading2_thumb.gif" style="display:none" id="insert_wait"
+                img src="/pic/loading2_thumb.gif" id="insert_wait"
 
-        div id="result"
+        div id="results"
 
         javascript:
             $('#insert_wait').hide();

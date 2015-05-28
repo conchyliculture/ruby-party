@@ -1,0 +1,65 @@
+html {
+    background: #EEEEEE;
+}
+
+body {
+    width:75%;
+    margin:0 auto;
+}
+
+a:link    { color: #c00 }  /* unvisited links */
+a:visited { color: #0c0 }  /* visited links   */
+a:hover   { color: #00c }  /* user hovers     */
+a:active  { color: #ccc }  /* active links    */
+
+.header {
+
+}
+
+#title {
+    width:100%;
+}
+
+#h_search {
+    float:left;
+    width:40%;
+}
+
+#h_insert {
+    float:right;
+    width:40%;
+}
+
+img#insert_wait {
+    display:none;
+}
+
+img.thumb {
+    height:64px;
+}
+
+#results {
+    padding-top:10px;
+    clear:both;
+}
+
+.result{
+    height:64px;
+    background-color:#DDDDDD;
+    display: inline;
+}
+
+div.thumb{
+    float:left;
+}
+
+.link_title {
+    padding-top=5px;
+}
+.push_pl {
+    padding-top=5px;
+}
+
+.bottom {
+    height: 20px;
+}
