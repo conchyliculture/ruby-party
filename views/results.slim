@@ -1,5 +1,12 @@
 -@results.each do |res|
-    p class="result"
-        -if res.has_key?(:cover)
-            img src="#{res[:cover]}"  height="64"
-        a href="/videos/#{res[:file]}" #{res[:title]} 
+    div class="result"
+        div class="thumb"
+            -if res.has_key?(:cover)
+                img src="#{res[:cover]}"  class="thumb"
+        div class="link_title"
+            | #{res[:title]} <a href="/videos/#{res[:file]}">(Download file)</a>
+        div class="push_pl"
+            a href="/pushpl?id=#{res[:id]}" Add to local vlc playlist
+        div class="edit"
+            a href="/editinfo?id=#{res[:id]}" Edit info
+        div class="bottom"

@@ -9,15 +9,12 @@ require "config.rb"
 require "db.rb"
 require "video.rb"
 
-
 def search(query)
     @dbh.search(query).map{ |v|
         cover = Video.cover_to_b64(v[:file])
         if cover
-            $stderr.puts v[:file]+" has cover"
             v.merge({:cover => "data:image/jpeg;base64,"+cover})
         else
-            $stderr.puts v[:file]+" has no cover"
             v
         end
     }
@@ -30,7 +27,6 @@ before  do
 end
 
 get '/' do
-    $stderr.puts CONFIG[:dsn]
     slim :main
 end
 
@@ -44,11 +40,11 @@ end
 
 get '/insert_http' do
     url=@params[:url]
-    res=Video.download_url(url)
+    res=Video.download_url(@dbh,url)
+    time=0
     if res[:status]!=0
         status 500
     else
-        Video.reindex(@dbh)
         status 200
     end
     res[:message]
@@ -58,3 +54,12 @@ get '/reindex' do
     Video.reindex(@dbh)
 end
 
+get '/pushpl' do
+    f = @dbh.get_file_from_id(@params[:id])
+    file=File.join(CONFIG[:ytdldestdir],f)
+    if File.exist?(file)
+        cmd="DISPLAY=:0 vlc --one-instance --playlist-enqueue \"#{file}\" 2>&1 > /dev/null"
+        $stderr.puts cmd
+        `#{cmd}`
+    end
+end

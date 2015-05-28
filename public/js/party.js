@@ -1,57 +1,57 @@
 function partyfail(msg) {
-    $('#result').html("<font color='red'>"+msg+"</font>");
-}
-function partywin(msg) {
-    $('#result').html("<font color='green'>"+msg+"</font>");
+    $('#results').html("<font color='red'>"+msg+"</font>");
 }
 
 function search_text_changed() {
     var query = document.getElementById("search").value;
-    if ( query.length >= 3 ){
+    if ( query.length >= 2 ){
         $.ajax({ url: "/lookup",
                 data: "query="+query ,
                 dataType: "html",
                 success: function(data) {
-                    $('#result').html(data);
+                    $('#results').html(data);
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) { 
                     partyfail("Status: " + textStatus + " <br/> "+"Error: " + XMLHttpRequest.responseText);
                 }
-
         });
     }
 }
 
+function dl(url) {
+    $.ajax({    url: "/insert_http",
+                data: "url="+encodeURIComponent(url),
+                dataType: "html",
+                complete: function(jqXHR,textStatus) {
+                    if (textStatus == "success") {
+                        toastr.options.timeOut = 1500;
+                        toastr.success("Video successfully added");
+                        $('#insert_wait').hide();
+                        $('#insert').val('');
+                    }
+                    else if (textStatus == "error") {
+                        partyfail("Status: " + textStatus + " <br/> "+"Error: " + jqXHR.responseText);
+                        $('#insert_wait').hide();
+                        $('#insert').val('');
+                    } else {
+                        console.log("status "+textStatus);
+                    }
+                },
+                beforeSend: function(jqXHR, settings) {
+                    $('#insert_wait').height($('#h_insert').height());
+                    $('#insert_wait').show();
+                },
+    });
+}
+
 function insert_text_changed() {
     var query = document.getElementById("insert").value;
-    if ( query.length >= 3 ){
+    if ( query.length >= 2 ){
         if (query.indexOf("http://")==0 || query.indexOf("https://") ==0 ){
-            console.log("http");
-            $.ajax({    url: "/insert_http",
-                        data: "url="+encodeURIComponent(query),
-                        dataType: "html",
-                        error: function(XMLHttpRequest, textStatus, errorThrown) { 
-                            partyfail("Status: " + textStatus + " <br/> "+"Error: " + XMLHttpRequest.responseText);
-                        }
-        });
+            dl(+query);
         }
         else if (query.length==11) {
-            console.log("yt");
-            $.ajax({    url: "/insert_http",
-                        data: "url="+encodeURIComponent("https://www.youtube.com/watch?v="+query),
-                        dataType: "html",
-                        beforeSend: function(jqXHR, settings) {
-                            $('#insert_wait').show();
-                        },
-                        error: function(XMLHttpRequest, textStatus, errorThrown) { 
-                            partyfail("Status: " + textStatus + " <br/> "+"Error: " + errorThrown);
-                        },
-                        complete: function ( jqXHR, textStatus ) {
-                            partywin("New video inserted");
-                            $('#insert_wait').hide();
-                            $('insert').val('');
-                        },
-        });
+            dl("https://www.youtube.com/watch?v="+query);
         }
     }
 }
