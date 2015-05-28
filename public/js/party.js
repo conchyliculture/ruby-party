@@ -81,7 +81,7 @@ function insert_text_changed() {
     var query = document.getElementById("insert").value;
     if ( query.length >= 2 ){
         if (query.indexOf("http://")==0 || query.indexOf("https://") ==0 ){
-            dl(+query);
+            dl(query);
         }
         else if (query.length==11) {
             dl("https://www.youtube.com/watch?v="+query);
