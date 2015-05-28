@@ -19,6 +19,16 @@ def search(query)
         end
     }
 end
+def get10()
+    @dbh.get_rand(10).map{ |v|
+        cover = Video.cover_to_b64(v[:file])
+        if cover
+            v.merge({:cover => "data:image/jpeg;base64,"+cover})
+        else
+            v
+        end
+    }
+end
 
 set :bind, '0.0.0.0'
 
@@ -62,4 +72,9 @@ get '/pushpl' do
         $stderr.puts cmd
         `#{cmd}`
     end
+end
+
+get '/get10' do
+    @results=get10()
+    slim :results
 end

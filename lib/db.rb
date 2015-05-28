@@ -30,6 +30,21 @@ class PartyDB
         @dbh.do("DELETE FROM infos")
     end
 
+    def get_rand(count=10)
+        res=[]
+        @dbh.select_all("SELECT id,yid,title,file,description,comment FROM infos ORDER BY RANDOM() LIMIT ?",count).each do |row|
+            res << {
+                :id => row[0],
+                :yid => row[1],
+                :title => row[2],
+                :file => row[3],
+                :description => row[4],
+                :comment => row[5],
+            }
+        end
+        res
+    end
+
     def search(q)
         res=[]
         @dbh.select_all("SELECT id,yid,title,file,description,comment FROM infos WHERE title LIKE ?","%#{q}%").each do |row|

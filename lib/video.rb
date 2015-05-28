@@ -91,20 +91,20 @@ module Video
         uri=URI.parse(url)
         extra_args=""
 
-        cmd = "#{CONFIG[:ytdlcmd]} #{CONFIG[:extraytdlargs]} --write-thumbnail --no-mtime  -t --add-metadata --recode-video mp4 --audio-quality 0  \"#{URI.decode(url)}\" 2>&1"
+        cmd = "#{CONFIG[:ytdlcmd]} #{CONFIG[:extraytdlargs]} --write-thumbnail --no-mtime --add-metadata --recode-video mp4 --audio-quality 0  \"#{URI.decode(url)}\" -o \"#{CONFIG[:ytdldestdir]}/%(title)s-%(id)s.%(ext)s\" 2>&1"
         prev=Dir.pwd()
-        Dir.chdir(CONFIG[:ytdldestdir])
         res={}
         res[:message]=`#{cmd}`.gsub(/\n/,"<br/>")
         res[:status] = $?
-        jpg_file=Dir.glob("*.jpg")[0]
-        res[:file] =jpg_file.sub(".jpg",".mp4")
-        $stderr.puts "file : "+res[:file]
-        Video.add_covers(jpg_file)
-        Video.add(dbh,res[:file])
-        Dir.chdir(prev)
-
-
+        jpg_file=Dir.glob(File.join(CONFIG[:ytdldestdir],"*.jpg"))[0]
+        if jpg_file
+            if File.exist?(jpg_file)
+                res[:file] =jpg_file.sub(".jpg",".mp4")
+                $stderr.puts "file : "+res[:file]
+                Video.add_covers(jpg_file)
+                Video.add(dbh,res[:file])
+            end
+        end
         return res
 
     end
