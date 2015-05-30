@@ -15,7 +15,7 @@ def check_ssl_env(dir)
             `make-cadir "#{dir}"`
             Dir.chdir(dir)
             File.new("make_pki.sh","w").write( <<EOF
-. vars
+. ./vars
 ./clean-all
 echo "Making a CA (you may want to import `pwd`/ca.crt in your browser)"
 ./build-ca
@@ -25,7 +25,6 @@ echo "Making a client certificate (you may want to import ̀̀`pwd`/local-party.
 ./build-key-pkcs12 local-party
 EOF
             )
-
 
             `sh make_pki.sh`
         end
