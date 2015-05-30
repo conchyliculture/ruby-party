@@ -17,7 +17,7 @@ module Sinatra
         :SSLEnable => true,
         :SSLCertificate => OpenSSL::X509::Certificate.new(certificate_content),
         :SSLPrivateKey => OpenSSL::PKey::RSA.new(key_content),
-        :SSLVerifyClient => OpenSSL::SSL::VERIFY_PEER|OpenSSL::SSL::VERIFY_FAIL_IF_NO_PEER_CERT,
+        :SSLVerifyClient => CONFIG[:ssl_verify_client] ? OpenSSL::SSL::VERIFY_PEER|OpenSSL::SSL::VERIFY_FAIL_IF_NO_PEER_CERT : OpenSSL::SSL::VERIFY_NONE,
         :SSLCACertificateFile => CONFIG[:ssl_CA_certificate], 
       }
 
