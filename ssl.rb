@@ -23,7 +23,10 @@ echo "Making a server certificate"
 echo "Making a client certificate (you may want to import ̀̀`pwd`/local-party.p12 in your browser)"
 ./build-key-pkcs12 local-party
 EOF
+            )
+
             Dir.chdir(dir)
+
             `sh make_pki.sh`
         end
     end
