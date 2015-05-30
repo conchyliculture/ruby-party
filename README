@@ -4,3 +4,16 @@ gem install taglib-ruby -i lib
 apt-get install ruby-sinatra ruby-siml ruby-sequel ruby-sqlite3
 apt-get install ruby-dev g++ taglib-dev
 apt-get install youtube-dl ffmpeg
+
+
+apt-get install easy-rsa
+
+mkdir ssl
+make-cadir my_ca
+cd my_ca
+vi vars
+source ./vars
+clean-all
+./build-ca
+./build-key-server party
+./build-key local-party
