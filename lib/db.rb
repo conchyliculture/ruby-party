@@ -47,7 +47,7 @@ class PartyDB
 
     def search(q)
         res=[]
-        @dbh.select_all("SELECT id,yid,title,file,description,comment FROM infos WHERE title LIKE ?","%#{q}%").each do |row|
+        @dbh.select_all("SELECT id,yid,title,file,description,comment FROM infos WHERE title LIKE ? or description LIKE ?","%#{q}%","%#{q}%").each do |row|
             res << {
                 :id => row[0],
                 :yid => row[1],
@@ -61,6 +61,7 @@ class PartyDB
     end
 
     def get_file_from_id(id)
+        return "lol?" unless id=~/^\d+$/
         res=@dbh.select_one("SELECT file FROM infos WHERE id = ?",id)
         return res[0]
     end

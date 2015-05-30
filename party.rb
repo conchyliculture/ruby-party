@@ -9,6 +9,7 @@ require "config.rb"
 require "db.rb"
 require "video.rb"
 
+
 def search(query)
     @dbh.search(query).map{ |v|
         cover = Video.cover_to_b64(v[:file])

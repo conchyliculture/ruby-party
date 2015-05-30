@@ -1,12 +1,58 @@
+div id="dialog-form" title="Create new user"
+    p class="validateTips"
+        | All form fields are required.
+    form
+        fieldset
+            label for="title"
+                | Title
+                input type="text" name="title" id="title" class="text ui-widget-content ui-corner-all" value=""
+            input type="submit" tabindex="-1" style="position:absolute; top:-1000px"
+
+javascript:
+    var dialog, form;
+
+    function addUser() {
+        console.log("lol");
+    }
+
+    dialog = $( "#dialog-form" ).dialog({
+      autoOpen: false,
+      height: 300,
+      width: 350,
+      modal: true,
+      buttons: {
+        "Create an account": addUser,
+        Cancel: function() {
+          dialog.dialog( "close" );
+        }
+      },
+      close: function() {
+        form[ 0 ].reset();
+        allFields.removeClass( "ui-state-error" );
+      }
+    });
+    form = dialog.find( "form" ).on( "submit", function( event ) {
+      event.preventDefault();
+      addUser();
+    });
+
+    $( ".editinfo" ).button().on( "click", function() {
+        dialog
+        .data('id',this.id)
+        .dialog( "open" );
+    });
+
+
 -@results.each do |res|
     div class="result"
         div class="thumb"
             -if res.has_key?(:cover)
                 img src="#{res[:cover]}"  class="thumb"
         div class="link_title"
-            | #{res[:title]} <a href="/videos/#{res[:file]}">(Download file)</a>
+            | #{res[:title]} / #{res[:yid]} <a href="/videos/#{res[:file]}">(Download file)</a>
         div class="push_pl"
-             button type="button" onclick="push_to_playlist(#{res[:id]})" Push to current Playlist
+            button onclick="push_to_playlist(#{res[:id]})" Push to current Playlist
         div class="edit"
-            a href="/editinfo?id=#{res[:id]}" Edit info
+            button class="editinfo" id="#{res[:id]}" Edit Info
         div class="bottom"
+
