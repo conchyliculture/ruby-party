@@ -4,10 +4,33 @@ require 'webrick/https'
 
 require "config.rb"
 
+def check_ssl_env(dir)
+    unless Dir.exist?(dir)
+        puts "Can't find #{dir}"
+        `which make-cadir`
+        unless $?.success?
+            puts "You haven't installed easy-rsa. You're on your own to build your PKI"
+            exit
+        else
+            `make-cadir "#{dir}"`
+            Dir.chdir(dir)
+            `source ./vars`
+            `clean-all`
+            puts "Making a CA (you may want to import #{dir}/ca.crt in your browser)"
+            `./build-ca`
+            puts "Making a server certificate"
+            `./build-key-server party`
+            puts "Making a client certificate (you may want to import #{dir}/local-party.p12 in your browser)"
+            `./build-key-pkcs12 local-party`
+        end
+    end
+end
+
 # Thx to http://stackoverflow.com/a/8952137
 module Sinatra
   class Application
     def self.run!
+        check_ssl_env(CONFIG[:ssh_config_dir] || "ssl")
       certificate_content = File.open(CONFIG[:ssl_server_certificate]).read
       key_content = File.open(CONFIG[:ssl_server_key]).read
 
