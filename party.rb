@@ -10,9 +10,12 @@ require "config.rb"
 require "db.rb"
 require "video.rb"
 
-require "ssl.rb" if ARGV[0] == "ssl"
-
-
+if ARGV[0] == "ssl"
+    require "ssl.rb"
+else
+    set :bind, CONFIG[:http_bind] || "127.0.0.1"
+    set :port, CONFIG[:http_port] || 4567
+end
 
 def search(query)
     @dbh.search(query).map{ |v|
@@ -24,6 +27,7 @@ def search(query)
         end
     }
 end
+
 def get10()
     @dbh.get_rand(10).map{ |v|
         cover = Video.cover_to_b64(v[:file])
@@ -35,7 +39,6 @@ def get10()
     }
 end
 
-set :bind, '0.0.0.0'
 
 before  do
     @dbh = PartyDB.new(CONFIG) 
