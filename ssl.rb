@@ -12,8 +12,8 @@ module Sinatra
       key_content = File.open(CONFIG[:ssl_server_key]).read
 
       server_options = {
-        :Host => CONFIG[:ssl_host],
-        :Port => CONFIG[:ssl_port],
+        :Host => CONFIG[:https_host] || "127.0.0.1",
+        :Port => CONFIG[:https_port] || 8443,
         :SSLEnable => true,
         :SSLCertificate => OpenSSL::X509::Certificate.new(certificate_content),
         :SSLPrivateKey => OpenSSL::PKey::RSA.new(key_content),

@@ -6,7 +6,6 @@ module Video
     require "uri" 
     require "base64"
     require "open-uri"
-    require "config.rb"
     require "taglib"
     require "db.rb"
 
