@@ -19,11 +19,11 @@ def check_ssl_env(dir)
 . ./vars
 ./clean-all
 echo "Making a CA (you may want to import `pwd`/ca.crt in your browser)"
-./build-ca
+./build-ca --batch
 echo "Making a server certificate"
-./build-key-server party
+./build-key-server --batch party
 echo "Making a client certificate (you may want to import ̀̀`pwd`/local-party.p12 in your browser)"
-./build-key-pkcs12 local-party
+./build-key-pkcs12 --batch local-party
 EOF
             )
             f.close()
