@@ -10,14 +10,7 @@ require "config.rb"
 require "db.rb"
 require "video.rb"
 
-if ARGV[0] == "ssl"
-    set :ssl_ca, "ssl/my_ca/keys/ca.crt"
-    set :ssl_certificate, "ssl/my_ca/keys/party.crt"
-    set :ssl_key, "ssl/my_ca/keys/party.key"
-    set :ssl_host, "0.0.0.0"
-    set :ssl_port, 8443
-    require "ssl.rb"
-end
+require "ssl.rb" if ARGV[0] == "ssl"
 
 
 
