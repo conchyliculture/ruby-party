@@ -2,4 +2,3 @@
 *.sqlite
 lib/taglib*
 ssl
-*.mp4
