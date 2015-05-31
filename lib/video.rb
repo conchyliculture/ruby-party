@@ -52,9 +52,7 @@ module Video
         if f=~/-([a-zA-Z0-9_-]{11})\.mp4/
             infos[:yid] = $1
         end
-        $stderr.puts "opening #{Dir.pwd}/#{f}"
         TagLib::MP4::File.open(f) do |mp4|
-            $stderr.puts "title : #{mp4.tag.title}"
             break unless mp4.tag
             infos[:title]=mp4.tag.title 
             if (mp4.tag.item_list_map["\xC2\xA9cmt"])
