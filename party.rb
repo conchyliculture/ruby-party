@@ -11,7 +11,8 @@ require "config.rb"
 require "db.rb"
 require "video.rb"
 
-if ARGV[0] == "ssl"
+case ARGV[0]
+when "ssl"
     require "ssl.rb"
 else
     set :bind, CONFIG[:http_host] || "127.0.0.1"
@@ -40,6 +41,7 @@ def get10()
     }
 end
 
+$vlc = `pgrep vlc` != ""
 
 before  do
     @dbh = PartyDB.new(CONFIG) 
