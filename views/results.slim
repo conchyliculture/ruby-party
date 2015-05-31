@@ -1,12 +1,4 @@
 div id="dialog-form" title="Create new user"
-    p class="validateTips"
-        | All form fields are required.
-    form
-        fieldset
-            label for="title"
-                | Title
-                input type="text" name="title" id="title" class="text ui-widget-content ui-corner-all" value=""
-            input type="submit" tabindex="-1" style="position:absolute; top:-1000px"
 
 javascript:
     var dialog, form;
@@ -27,8 +19,6 @@ javascript:
         }
       },
       close: function() {
-        form[ 0 ].reset();
-        allFields.removeClass( "ui-state-error" );
       }
     });
     form = dialog.find( "form" ).on( "submit", function( event ) {
@@ -36,9 +26,22 @@ javascript:
       addUser();
     });
 
+    $( ".addtopl" ).button().on( "click", function() {
+        var lolid= $(this.data).data("lolid");
+        push_to_playlist(lolid);
+    });
+
     $( ".editinfo" ).button().on( "click", function() {
+        $.ajax({
+            url: "/dialog",
+            data: "id="+$(this).data("lolid"),
+            success: function(data){
+                $("#dialog-form").html(data);
+            }   
+        });
+
         dialog
-        .data('id',this.id)
+        .html('lolid', $(this).data('lolid'))
         .dialog( "open" );
     });
 
@@ -51,8 +54,8 @@ javascript:
         div class="link_title"
             | #{res[:title]} / #{res[:yid]} <a href="/videos/#{res[:file]}">(Download file)</a>
         div class="push_pl"
-            button onclick="push_to_playlist(#{res[:id]})" Push to current Playlist
+            button class="addtopl" data-lolid="#{res[:id]}" Push to current Playlist
         div class="edit"
-            button class="editinfo" id="#{res[:id]}" Edit Info
+            button class="editinfo" data-lolid="#{res[:id]}" Edit Info
         div class="bottom"
 

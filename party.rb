@@ -13,7 +13,7 @@ require "video.rb"
 if ARGV[0] == "ssl"
     require "ssl.rb"
 else
-    set :bind, CONFIG[:http_bind] || "127.0.0.1"
+    set :bind, CONFIG[:http_host] || "127.0.0.1"
     set :port, CONFIG[:http_port] || 4567
 end
 
@@ -85,4 +85,10 @@ end
 get '/get10' do
     @results=get10()
     slim :results
+end
+
+get '/dialog' do 
+    vid = @params['id']
+    @res = @dbh.get_from_id(vid) 
+    slim :dialog
 end

@@ -1,5 +1,6 @@
 html {
     background: #EEEEEE;
+    font-family: Corbel, Arial, sans-serif;
 }
 
 body {
@@ -60,10 +61,19 @@ div.thumb{
 .link_title {
     padding-top=5px;
 }
+
+.edit {
+    float:left;
+    padding-top:5px;
+}
+
 .push_pl {
-    padding-top=5px;
+    float:left;
+    padding-top:5px;
+    padding-right:5px;
 }
 
 .bottom {
     height: 20px;
+    clear: both;
 }

@@ -45,6 +45,19 @@ class PartyDB
         res
     end
 
+    def get_from_id(id)
+        row=@dbh.select_one("SELECT id,yid,title,file,description,comment FROM infos WHERE id = ?",id)
+        res = {
+            :id => row[0],
+            :yid => row[1],
+            :title => row[2],
+            :file => row[3],
+            :description => row[4],
+            :comment => row[5],
+        }
+        res
+    end
+
     def search(q)
         res=[]
         @dbh.select_all("SELECT id,yid,title,file,description,comment FROM infos WHERE title LIKE ? or description LIKE ?","%#{q}%","%#{q}%").each do |row|
