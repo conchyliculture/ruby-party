@@ -20,5 +20,5 @@ clean-all
 ./build-key-server party
 ./build-key-pkcs12 local-party
 
-ruby ssl.rb
+ruby party.rb ssl
 
