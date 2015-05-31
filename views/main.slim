@@ -23,6 +23,8 @@ html
                 input id="insert" type="text"
                 img src="/pic/loading2_thumb.gif" id="insert_wait"
 
+        div id="dialog-form" title="No title" 
+
         div id="results"
 
         javascript:
@@ -34,3 +36,6 @@ html
                 insert_text_changed();
                 }});
             $( document ).ready( search_text_changed() );
+
+            var dialog, form;
+

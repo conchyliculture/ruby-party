@@ -4,6 +4,7 @@ $: << File.join(File.dirname(__FILE__))
 $: << File.join(File.dirname(__FILE__),"lib")
 
 require "pp"
+require "cgi"
 require 'sinatra'
 require "slim"
 require "config.rb"
@@ -89,6 +90,14 @@ end
 
 get '/dialog' do 
     vid = @params['id']
-    @res = @dbh.get_from_id(vid) 
+    @res = @dbh.get_from_id(vid)
+    @res[:desription]= CGI.escapeHTML(@res[:description])
     slim :dialog
+end
+
+post '/changeinfo' do
+    vid = @params[:id]
+    text = @params[:data]
+    @dbh.set_comment(vid,text)
+    ""
 end
