@@ -79,6 +79,10 @@ class PartyDB
         return res[0]
     end
 
+    def set_comment(id,t)
+        @dbh.do("UPDATE infos SET comment=? WHERE id =?",t,id)
+    end
+
 
 #    def import_from_ytfacts(dsn)
 #        dbh = Sequel.connect("mysql://ytdluser:ytdlpass@10.0.3.10/youtube_dl")

@@ -23,6 +23,30 @@ function push_to_playlist(id) {
 
 }
 
+
+function submitForm(id) {
+    if (id>-1) {
+    $.ajax({ url: "/changeinfo",
+            data: "id="+id+"&data=" +$( "#comment" ).val() ,
+            type: 'POST',
+            dataType: "html",
+            complete: function(jqXHR,textStatus) {
+                if (textStatus == "success") {
+                    toastr.options.timeOut = 1500;
+                    toastr.success("Comment successfully added");
+                }
+                else if (textStatus == "error") {
+                    partyfail("Status: " + textStatus + " <br/> "+"Error: " + jqXHR.responseText);
+                } else {
+                    console.log("status "+textStatus);
+                }
+            },
+    });
+    } else {
+        console.log("fail "+id);
+    }
+}
+
 function search_text_changed() {
     var query = document.getElementById("search").value;
     if (query.length == 0) {
@@ -87,4 +111,5 @@ function insert_text_changed() {
             dl("https://www.youtube.com/watch?v="+query);
         }
     }
+
 }

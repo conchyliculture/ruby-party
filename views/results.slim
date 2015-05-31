@@ -1,50 +1,50 @@
-div id="dialog-form" title="Create new user"
-
 javascript:
-    var dialog, form;
-
-    function addUser() {
-        console.log("lol");
-    }
-
     dialog = $( "#dialog-form" ).dialog({
-      autoOpen: false,
-      height: 300,
-      width: 350,
-      modal: true,
-      buttons: {
-        "Create an account": addUser,
-        Cancel: function() {
-          dialog.dialog( "close" );
+        autoOpen: false,
+        height: 300,
+        width: 350,
+        modal: true,
+        buttons: {
+            Cancel: function() {
+                dialog.dialog( "close" );
+            }
+        },
+        close: function() {
         }
-      },
-      close: function() {
-      }
     });
     form = dialog.find( "form" ).on( "submit", function( event ) {
-      event.preventDefault();
-      addUser();
+        var lolid= $(this).data("lolid");
+        submitForm(lolid);
+        dialog.dialog( "close" );
     });
 
     $( ".addtopl" ).button().on( "click", function() {
-        var lolid= $(this.data).data("lolid");
+        var lolid= $(this).data("lolid");
         push_to_playlist(lolid);
     });
 
     $( ".editinfo" ).button().on( "click", function() {
+        var t = $(this).data("loltitle");
+        var id = $(this).data("lolid");
         $.ajax({
             url: "/dialog",
-            data: "id="+$(this).data("lolid"),
+            data: "id="+id,
             success: function(data){
-                $("#dialog-form").html(data);
-            }   
+                $("#ui-id-1").html(t);
+                dialog.html(data);
+                dialog.dialog( "option", "buttons", 
+                    [{
+                        text: "Submit",
+                        click: function() {
+                            submitForm(id);
+                            dialog.dialog( "close" );
+                        }
+                    }]);
+            }
         });
 
-        dialog
-        .html('lolid', $(this).data('lolid'))
-        .dialog( "open" );
+        dialog.dialog( "open" );
     });
-
 
 -@results.each do |res|
     div class="result"
@@ -52,10 +52,10 @@ javascript:
             -if res.has_key?(:cover)
                 img src="#{res[:cover]}"  class="thumb"
         div class="link_title"
-            | #{res[:title]} / #{res[:yid]} <a href="/videos/#{res[:file]}">(Download file)</a>
+            | #{res[:title]} <p style="margin-top:2px; margin-bottom:2px">#{res[:yid]}</p> <a href="/videos/#{res[:file]}">(Download file)</a>
         div class="push_pl"
-            button class="addtopl" data-lolid="#{res[:id]}" Push to current Playlist
+            button class="addtopl"  data-lolid="#{res[:id]}" Push to current Playlist
         div class="edit"
-            button class="editinfo" data-lolid="#{res[:id]}" Edit Info
+            button class="editinfo" data-lolid="#{res[:id]}" data-loltitle="#{res[:title]}" Edit Info
         div class="bottom"
 

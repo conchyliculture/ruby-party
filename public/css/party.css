@@ -5,8 +5,15 @@ html {
 
 body {
     width:75%;
+    font-size: 62.5%;
     margin:0 auto;
 }
+label, input { display:block; }
+input.text { margin-bottom:12px; width:95%; padding: .4em; }
+textarea#comment { height:150px; }
+fieldset { padding:0; border:0; margin-top:25px; }
+h1 { font-size: 1.2em; margin: .6em 0; }
+.ui-dialog .ui-state-error { padding: .3em; }
 
 a:link    { color: #c00 }  /* unvisited links */
 a:visited { color: #0c0 }  /* visited links   */
