@@ -1,7 +1,7 @@
 
 
 gem install taglib-ruby -i lib
-apt-get install ruby-sinatra ruby-siml ruby-sequel ruby-sqlite3
+apt-get install ruby-sinatra ruby-slim ruby-sqlite3
 apt-get install ruby-dev g++ taglib-dev
 apt-get install youtube-dl ffmpeg
 

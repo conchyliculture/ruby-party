@@ -100,6 +100,6 @@ end
 post '/changeinfo' do
     vid = @params[:id]
     text = @params[:data]
-    @dbh.set_comment(vid,text)
+    Video.set_comment(@dbh,vid,text)
     ""
 end
