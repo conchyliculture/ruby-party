@@ -8,6 +8,7 @@ module Video
     require "open-uri"
     require "taglib"
     require "db.rb"
+    require "json"
 
     def Video.has_cover?(file)
         TagLib::MP4::File.open(File.join(CONFIG[:ytdldestdir],file)) do |mp4|
@@ -56,7 +57,14 @@ module Video
             break unless mp4.tag
             infos[:title]=mp4.tag.title 
             if (mp4.tag.item_list_map["\xC2\xA9cmt"])
-                infos[:description] = mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0]
+                begin
+                    lol = JSON.parse(mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0])
+                    infos[:description] = lol["description"] 
+                    infos[:comment] = lol["comment"] 
+                    infos[:url] = lol["url"] 
+                rescue JSON::ParserError => e
+                    infos[:description] = mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0] 
+                end
             end
         end
         dbh.add_video(infos)
@@ -84,23 +92,65 @@ module Video
         File.delete(f)
     end
 
+    def Video.set_url(dbh,fmp4,url)
+        TagLib::MP4::File.open(fmp4) do |mp4|
+            cur_infos={}
+            begin
+                cur_infos = JSON.parse(mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0])
+            rescue JSON::ParserError => e
+                cur_infos[:description]=mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0]
+            end
+
+            cur_infos["url"]=url
+            mp4.tag.item_list_map.insert("\xC2\xA9cmt", TagLib::MP4::Item.from_string_list([JSON.dump(cur_infos)]))
+            mp4.save
+        end
+    end
+
+    def Video.set_comment(dbh,vid,cmt)
+        fmp4 = File.join(CONFIG[:ytdldestdir],dbh.get_file_from_id(vid))
+        TagLib::MP4::File.open(fmp4) do |mp4|
+            cur_infos={}
+            begin
+                cur_infos = JSON.parse(mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0])
+            rescue JSON::ParserError => e
+                cur_infos[:description]=mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0]
+            end
+            cur_infos["comment"]=cmt
+            mp4.tag.item_list_map.insert("\xC2\xA9cmt", TagLib::MP4::Item.from_string_list([JSON.dump(cur_infos)]))
+            mp4.save
+        end
+        dbh.set_comment(vid,cmt)
+    end
+
+    def Video.add_cmt(f,infos)
+        TagLib::MP4::File.open(fmp4) do |mp4|
+            mp4.tag.item_list_map.insert("\xC2\xA9cmt", TagLib::MP4::Item.from_string_list([JSON.dump(infos)]))
+            mp4.save
+        end
+    end
+
     def Video.download_url(dbh,url)
         uri=URI.parse(url)
         extra_args=""
-
-        cmd = "#{CONFIG[:ytdlcmd]} #{CONFIG[:extraytdlargs]} --write-thumbnail --no-mtime --add-metadata --recode-video mp4 --audio-quality 0  \"#{URI.decode(url)}\" -o \"#{CONFIG[:ytdldestdir]}/%(title)s-%(id)s.%(ext)s\" 2>&1"
-        prev=Dir.pwd()
         res={}
-        res[:message]=`#{cmd}`.gsub(/\n/,"<br/>")
-        res[:status] = $?
-        jpg_file=Dir.glob(File.join(CONFIG[:ytdldestdir],"*.jpg"))[0]
-        if jpg_file
-            if File.exist?(jpg_file)
-                res[:file] =jpg_file.sub(".jpg",".mp4")
-                $stderr.puts "file : "+res[:file]
-                Video.add_covers(jpg_file)
-                Video.add(dbh,res[:file])
+        unless dbh.already_in_db?(url)
+            cmd = "#{CONFIG[:ytdlcmd]} #{CONFIG[:extraytdlargs]} --write-thumbnail --no-mtime --add-metadata --recode-video mp4 --audio-quality 0  \"#{URI.decode(url)}\" -o \"#{CONFIG[:ytdldestdir]}/%(title)s-%(id)s.%(ext)s\" 2>&1"
+            prev=Dir.pwd()
+            res[:message]=`#{cmd}`.gsub(/\n/,"<br/>")
+            res[:status] = $?
+            jpg_file=Dir.glob(File.join(CONFIG[:ytdldestdir],"*.jpg"))[0]
+            if jpg_file
+                if File.exist?(jpg_file)
+                    res[:file] =jpg_file.sub(".jpg",".mp4")
+                    Video.add_covers(jpg_file)
+                    Video.set_url(dbh,res[:file],url)
+                    Video.add(dbh,res[:file])
+                end
             end
+        else
+            res[:message]="ALready in db"
+            res[:status]=-1
         end
         return res
 

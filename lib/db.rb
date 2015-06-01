@@ -11,18 +11,21 @@ class PartyDB
                     `title` VARCHAR( 255 ) ,
                     `file`   varchar(255) ,
                     `description` varchar(255) ,
-                    `comment` varchar(255)
+                    `comment` varchar(255),
+                    `url` VARCHAR( 255 ) 
                     )
         ")
     end
 
     def add_video(infos)
-        @dbh.do("INSERT INTO infos  VALUES (null,?,?,?,?,?)",
+        pp infos
+        @dbh.do("INSERT INTO infos  VALUES (null,?,?,?,?,?,?)",
                 infos[:yid],
                 infos[:title],
                 infos[:file],
                 infos[:description],
                 infos[:comment],
+                infos[:url],
         )
     end
 
@@ -32,7 +35,7 @@ class PartyDB
 
     def get_rand(count=10)
         res=[]
-        @dbh.select_all("SELECT id,yid,title,file,description,comment FROM infos ORDER BY RANDOM() LIMIT ?",count).each do |row|
+        @dbh.select_all("SELECT id,yid,title,file,description,comment,url FROM infos ORDER BY RANDOM() LIMIT ?",count).each do |row|
             res << {
                 :id => row[0],
                 :yid => row[1],
@@ -40,13 +43,14 @@ class PartyDB
                 :file => row[3],
                 :description => row[4],
                 :comment => row[5],
+                :url => row[6],
             }
         end
         res
     end
 
     def get_from_id(id)
-        row=@dbh.select_one("SELECT id,yid,title,file,description,comment FROM infos WHERE id = ?",id)
+        row=@dbh.select_one("SELECT id,yid,title,file,description,comment,url FROM infos WHERE id = ?",id)
         res = {
             :id => row[0],
             :yid => row[1],
@@ -54,13 +58,14 @@ class PartyDB
             :file => row[3],
             :description => row[4],
             :comment => row[5],
+            :url => row[6],
         }
         res
     end
 
     def search(q)
         res=[]
-        @dbh.select_all("SELECT id,yid,title,file,description,comment FROM infos WHERE title LIKE ? or comment LIKE ?","%#{q}%","%#{q}%").each do |row|
+        @dbh.select_all("SELECT id,yid,title,file,description,comment,url FROM infos WHERE title LIKE ? or comment LIKE ?","%#{q}%","%#{q}%").each do |row|
             res << {
                 :id => row[0],
                 :yid => row[1],
@@ -68,6 +73,7 @@ class PartyDB
                 :file => row[3],
                 :description => row[4],
                 :comment => row[5],
+                :url => row[5],
             }
         end
         res
@@ -77,6 +83,11 @@ class PartyDB
         return "lol?" unless id=~/^\d+$/
         res=@dbh.select_one("SELECT file FROM infos WHERE id = ?",id)
         return res[0]
+    end
+
+    def already_in_db?(url)
+        res=@dbh.select_one("SELECT id FROM infos WHERE url=?",url)
+        return res != nil
     end
 
     def set_comment(id,t)
