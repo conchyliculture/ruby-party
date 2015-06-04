@@ -5,12 +5,24 @@ Simple single video archiver/searcher for noob VJs!
 Creates a website from where you can quickly search for the videos you want to
 watch.
 
-## Features :
+Currently only works with Youtube Videos.
+
+## Run it
+
+    git clone https://github.com/conchyliculture/ruby-party
+    cd ruby-party
+    ruby party.rb
+
+Then load `http://localhost:4567̀` with a Javascript enabled webrowser.
+
+It's possible to re-generate the .sqlite file from the MP4 (for example, if you move videos by hand on the filesystem) with a GET on `/reindex`.
+
+## Features 
 
 * SSL (with client cert authent if you wish)
 * Metadata (comments, cover) stored in the MP4 video
 
-## Requirements :
+## Requirements
 
     gem install taglib-ruby 
     apt-get install ruby-sinatra ruby-slim ruby-sqlite3
