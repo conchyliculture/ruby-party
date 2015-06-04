@@ -19,6 +19,7 @@ It's possible to re-generate the .sqlite file from the MP4 (for example, if you 
 
 ## Features 
 
+* If VLC is running, you can directly add a video to the current playlist
 * SSL (with client cert authent if you wish)
 * Metadata (comments, cover) stored in the MP4 video
 
