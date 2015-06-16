@@ -8,6 +8,32 @@ body {
     font-size: 62.5%;
     margin:0 auto;
 }
+
+nav {
+    position:fixed;
+    left:0;
+    top:0;
+    height:100%;
+    background:#CCCCCC;
+    transform:translateX(-90%);
+    transition:all 0.5s ease-in-out;
+}
+
+nav:hover {
+    transform:translateX(0px);
+}
+
+nav ul
+{
+    list-style-type: none;
+    padding:0px;
+    margin-top:30px;
+    margin-left:10px;
+    margin-right:10px;
+}
+
+
+
 label, input { display:block; }
 input.text { margin-bottom:12px; width:95%; padding: .4em; }
 textarea#comment { height:150px; }
@@ -16,8 +42,6 @@ h1 { font-size: 1.2em; margin: .6em 0; }
 .ui-dialog .ui-state-error { padding: .3em; }
 
 a:link    { color: #c00 }  /* unvisited links */
-a:visited { color: #0c0 }  /* visited links   */
-a:hover   { color: #00c }  /* user hovers     */
 a:active  { color: #ccc }  /* active links    */
 
 .header {

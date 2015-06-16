@@ -10,7 +10,6 @@ html
         link href="/css/toastr.css" rel="stylesheet"
         link href="/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet"
         title Instant party video finder
-        javascript:
     body 
         div class="header"
             div id="title"
@@ -27,6 +26,13 @@ html
 
         div id="results"
 
+        nav
+            | &nbsp;
+            ul
+                li
+                    a href="#" type="menuentry" id="btn-reindex"
+                        | Reindex videos
+
         javascript:
             $('#insert_wait').hide();
             $(document).on('change keyup','#search', search_text_changed );
@@ -38,4 +44,19 @@ html
             $( document ).ready( search_text_changed() );
 
             var dialog, form;
+
+            $(function() {
+                $( "a[type=menuentry]" )
+                .button()
+                .click(function( event ) {
+                    if (this.id=="btn-reindex") {
+                        reindex_videos();
+                        
+                    } else {
+                        console.log(this.id)
+                    }
+                }
+                );
+                }
+            );
 

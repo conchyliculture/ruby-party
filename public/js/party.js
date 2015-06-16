@@ -113,3 +113,20 @@ function insert_text_changed() {
     }
 
 }
+
+function reindex_videos() {
+    $.ajax({ url: "/reindex",
+            dataType: "html",
+            complete: function(jqXHR,textStatus) {
+                if (textStatus == "success") {
+                    toastr.options.timeOut = 1500;
+                    toastr.success(jqXHR.responseText+" videos successfully reindexed");
+                }
+                else if (textStatus == "error") {
+                    partyfail("Status: " + textStatus + " <br/> "+"Error: " + jqXHR.responseText);
+                } else {
+                    console.log("status "+textStatus);
+                }
+            },
+    });
+}
