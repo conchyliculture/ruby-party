@@ -77,7 +77,7 @@ module Video
             count+=1
             Video.add(dbh,f)
         end
-        return "Reindexed <#{count}> videos"
+        return count.to_s
     end
 
     def Video.add_covers(f)
