@@ -26,10 +26,25 @@ It's possible to re-generate the .sqlite file from the MP4 (for example, if you 
 
 ## Requirements
 
-    gem install taglib-ruby 
+First install some stuff :
+
     apt-get install ruby-sinatra ruby-slim ruby-sqlite3
-    apt-get install ruby-dev g++ taglib-dev
+    apt-get install ruby-dev g++ libtag1-dev
     apt-get install youtube-dl ffmpeg
+
+Then, either:
+
+* install `ruby-taglib` system-wide:
+
+    `gem install taglib-ruby`
+
+* install `ruby-taglib` in the `lib` folder only :
+
+    `gem install taglib-ruby -I /tmp/ `
+
+    `mkdir lib/taglib`
+
+    `mv /tmp/gems/taglib-ruby-0.*/lib/taglib* lib/taglib/`
 
 
 For SSL :
