@@ -26,6 +26,8 @@ It's possible to re-generate the .sqlite file from the MP4 (for example, if you 
 
 ## Requirements
 
+### Commons
+
 First install some stuff :
 
     apt-get install ruby-sinatra ruby-slim ruby-sqlite3
@@ -47,7 +49,7 @@ Then, either:
     `mv /tmp/gems/taglib-ruby-0.*/lib/taglib* lib/taglib/`
 
 
-For SSL :
+### For SSL
 
     apt-get install easy-rsa
 
@@ -67,4 +69,7 @@ It will build a simple PKI for you. But you can also do it by hand:
     ./build-key-server party
     ./build-key-pkcs12 local-party
 
+### YouKeePass
+
+    apt-get install encfs git
 
