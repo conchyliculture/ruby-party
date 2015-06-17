@@ -7,6 +7,15 @@ watch.
 
 Currently only works with Youtube Videos.
 
+## Video providers compatibility
+
+[Any video website](https://rg3.github.io/youtube-dl/supportedsites.html) which is supported by ̀`youtube-dl` should work.
+
+`ruby-party` has been tested against:
+
+* youtube
+* Xtube
+
 ## Run it
 
     git clone https://github.com/conchyliculture/ruby-party
