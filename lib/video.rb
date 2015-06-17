@@ -50,7 +50,7 @@ module Video
         $stderr.puts "adding #{f}"
         infos={}
         infos[:file]=File.basename(f)
-        if f=~/-([a-zA-Z0-9_-]{11})\.mp4/
+        if f=~/-([a-zA-Z0-9_-]{4,})\.mp4/
             infos[:yid] = $1
         end
         TagLib::MP4::File.open(f) do |mp4|
