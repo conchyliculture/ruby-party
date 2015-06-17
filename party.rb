@@ -20,7 +20,7 @@ else
 end
 
 def search(query)
-    @dbh.search(query).map{ |v|
+    @dbh.search(CGI.unescapeHTML(query)).map{ |v|
         cover = Video.cover_to_b64(v[:file])
         if cover
             v.merge({:cover => "data:image/jpeg;base64,"+cover})
@@ -53,7 +53,7 @@ end
 
 get '/lookup' do
     query=@params[:query]
-    if query =~/^([a-zA-Z0-9\-_]{1,20})$/
+    if query =~/^(.{1,20})$/
         @results=search($1)
         slim :results
     end
@@ -80,7 +80,6 @@ get '/pushpl' do
     file=File.join(CONFIG[:ytdldestdir],f)
     if File.exist?(file)
         cmd="DISPLAY=:0 vlc --one-instance --playlist-enqueue \"#{file}\" 2>&1 > /dev/null"
-        $stderr.puts cmd
         `#{cmd}`
     end
 end
