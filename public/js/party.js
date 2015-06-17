@@ -85,6 +85,7 @@ function dl(url) {
                         toastr.success("Video successfully added");
                         $('#insert_wait').hide();
                         $('#insert').val('');
+                        search_text_changed();
                     }
                     else if (textStatus == "error") {
                         partyfail("Status: " + textStatus + " <br/> "+"Error: " + jqXHR.responseText);
@@ -121,6 +122,7 @@ function reindex_videos() {
                 if (textStatus == "success") {
                     toastr.options.timeOut = 1500;
                     toastr.success(jqXHR.responseText+" videos successfully reindexed");
+                    search_text_changed();
                 }
                 else if (textStatus == "error") {
                     partyfail("Status: " + textStatus + " <br/> "+"Error: " + jqXHR.responseText);
