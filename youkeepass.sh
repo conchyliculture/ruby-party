@@ -1,5 +1,8 @@
 #!/bin/sh
 
+command -v encfs >/dev/null 2>&1 || { echo >&2 "I require encfs but it's not installed.  Aborting."; exit 1; }
+command -v git >/dev/null 2>&1 || { echo >&2 "I require git but it's not installed.  Aborting."; exit 1; }
+
 SAFE=`pwd`/.safe
 SAFEROOT=`pwd`/youkeepass
 
