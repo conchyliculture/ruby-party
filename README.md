@@ -71,5 +71,13 @@ It will build a simple PKI for you. But you can also do it by hand:
 
 ### YouKeePass
 
+This project can also be used as a local password manager.
+
+
     apt-get install encfs git
+    wget https://raw.githubusercontent.com/conchyliculture/ruby-party/master/youkeepass.sh
+    bash youkeepass.sh
+
+Then go to `https://localhost:8443` and start adding videos. The video ID displayed are your passwords !
+You can also add to the description of each video to easily store which passwords is used on which website.
 
