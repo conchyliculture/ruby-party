@@ -138,18 +138,27 @@ module Video
             cmd = "#{CONFIG[:ytdlcmd]} #{CONFIG[:extraytdlargs]} --write-thumbnail --no-mtime --add-metadata --recode-video mp4 --audio-quality 0  \"#{URI.decode(url)}\" -o \"#{CONFIG[:ytdldestdir]}/%(title)s-%(id)s.%(ext)s\" 2>&1"
             prev=Dir.pwd()
             res[:message]=`#{cmd}`.gsub(/\n/,"<br/>")
-            res[:status] = $?
-            jpg_file=Dir.glob(File.join(CONFIG[:ytdldestdir],"*.jpg"))[0]
-            if jpg_file
-                if File.exist?(jpg_file)
-                    res[:file] =jpg_file.sub(".jpg",".mp4")
-                    Video.add_covers(jpg_file)
-                    Video.set_url(dbh,res[:file],url)
-                    Video.add(dbh,res[:file])
-                end
+            res[:status] = $?.exitstatus
+            mp4_file=Dir.glob(File.join(CONFIG[:ytdldestdir],"*.mp4"))[0]
+            jpg_file=mp4_file.sub(/\.mp4\z/, ".jpg"  )
+            $stderr.puts "#{mp4_file} #{jpg_file}"
+            unless File.exist?(jpg_file)
+                cmd="ffmpeg -i \"#{mp4_file}\" -vframes 1 -f image2 \"#{jpg_file}\""
+                $stderr.puts cmd
+                res[:message]+=`#{cmd}`.gsub(/\n/,"<br/>")
+                res[:status] += $?.exitstatus 
+                jpg_file=Dir.glob(File.join(CONFIG[:ytdldestdir],"*.jpg"))[0]
+            end
+            if File.exist?(jpg_file)
+                res[:file] =jpg_file.sub(".jpg",".mp4")
+                Video.add_covers(jpg_file)
+                Video.set_url(dbh,res[:file],url)
+                Video.add(dbh,res[:file])
+            else
+                $stderr.puts "Can't find #{jpg_file}"
             end
         else
-            res[:message]="ALready in db"
+            res[:message]="URL #{url} is already in database"
             res[:status]=-1
         end
         return res
