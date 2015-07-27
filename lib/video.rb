@@ -47,6 +47,13 @@ module Video
         return res
     end
 
+    def Video.set_title(f,title)
+        TagLib::MP4::File.open(f) do |mp4|
+            mp4.tag.item_list_map.insert("\xC2\xA9nam", TagLib::MP4::Item.from_string_list([title]))
+            mp4.save
+        end
+    end
+
     def Video.add(dbh,f)
         $stderr.puts "adding #{f}"
         infos={}
@@ -81,16 +88,13 @@ module Video
         return count.to_s
     end
 
-    def Video.add_covers(f)
-        fmp4 = f.gsub(File.extname(f),".mp4")
-        image_data = File.open(f, 'rb') { |f| f.read }
+    def Video.add_cover(fmp4,image_data)
         cover_art = TagLib::MP4::CoverArt.new(TagLib::MP4::CoverArt::JPEG, image_data)
         item = TagLib::MP4::Item.from_cover_art_list([cover_art])
         TagLib::MP4::File.open(fmp4) do |mp4|
             mp4.tag.item_list_map.insert('covr', item)
             mp4.save
         end
-        File.delete(f)
     end
 
     def Video.set_url(dbh,fmp4,url)
@@ -124,7 +128,7 @@ module Video
         dbh.set_comment(vid,cmt)
     end
 
-    def Video.add_cmt(f,infos)
+    def Video.add_cmt(fmp4,infos)
         TagLib::MP4::File.open(fmp4) do |mp4|
             mp4.tag.item_list_map.insert("\xC2\xA9cmt", TagLib::MP4::Item.from_string_list([JSON.dump(infos)]))
             mp4.save
@@ -153,7 +157,8 @@ module Video
             end
             if File.exist?(jpg_file)
                 res[:file] =jpg_file.sub(".jpg",".mp4")
-                Video.add_covers(jpg_file)
+                Video.add_cover(mp4_file,File.read(jpg_file))
+                File.delete(jpg_file)
                 Video.set_url(dbh,res[:file],url)
                 Video.add(dbh,res[:file])
                 FileUtils.mv(mp4_file,CONFIG[:ytdldestdir]+"/")
