@@ -52,7 +52,7 @@ Then, either:
 
 * install `ruby-taglib` in the `lib` folder only :
 
-    `gem install taglib-ruby -I /tmp/ `
+    `gem install taglib-ruby -i /tmp/ `
 
     `mkdir lib/taglib`
 
