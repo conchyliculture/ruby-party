@@ -54,7 +54,7 @@ module Video
         end
     end
 
-    def Video.add(dbh,f)
+    def Video.add(f)
         $stderr.puts "adding #{f}"
         infos={}
         infos[:file]=File.basename(f)
@@ -75,15 +75,15 @@ module Video
                 end
             end
         end
-        dbh.add_video(infos)
+       PartyDB.add_video(infos)
     end
 
-    def Video.reindex(dbh)
-        dbh.truncate()
+    def Video.reindex()
+        PartyDB.truncate()
         count=0
         Dir.glob(File.join(CONFIG[:ytdldestdir],"*.mp4")).each do |f|
             count+=1
-            Video.add(dbh,f)
+            Video.add(f)
         end
         return count.to_s
     end
@@ -97,7 +97,7 @@ module Video
         end
     end
 
-    def Video.set_url(dbh,fmp4,url)
+    def Video.set_url(fmp4,url)
         TagLib::MP4::File.open(fmp4) do |mp4|
             cur_infos={}
             begin
@@ -112,8 +112,8 @@ module Video
         end
     end
 
-    def Video.set_comment(dbh,vid,cmt)
-        fmp4 = File.join(CONFIG[:ytdldestdir],dbh.get_file_from_id(vid))
+    def Video.set_comment(vid,cmt)
+        fmp4 = File.join(CONFIG[:ytdldestdir],PartyDB.get_file_from_id(vid))
         TagLib::MP4::File.open(fmp4) do |mp4|
             cur_infos={}
             begin
@@ -125,7 +125,7 @@ module Video
             mp4.tag.item_list_map.insert("\xC2\xA9cmt", TagLib::MP4::Item.from_string_list([JSON.dump(cur_infos)]))
             mp4.save
         end
-        dbh.set_comment(vid,cmt)
+        PartyDB.set_comment(vid,cmt)
     end
 
     def Video.add_cmt(fmp4,infos)
@@ -135,11 +135,11 @@ module Video
         end
     end
 
-    def Video.download_url(dbh,url)
+    def Video.download_url(url)
         uri=URI.parse(url)
         extra_args=""
         res={}
-        unless dbh.already_in_db?(url)
+        unless PartyDB.already_in_db?(url)
             FileUtils.mkdir_p(CONFIG[:tmpdir])
             cmd = "#{CONFIG[:ytdlcmd]} #{CONFIG[:extraytdlargs]} --write-thumbnail --no-mtime --add-metadata --recode-video mp4 --audio-quality 0  \"#{URI.decode(url)}\" -o \"#{CONFIG[:tmpdir]}/%(title)s-%(id)s.%(ext)s\" 2>&1"
             $stderr.puts cmd
@@ -159,8 +159,8 @@ module Video
                 res[:file] =jpg_file.sub(".jpg",".mp4")
                 Video.add_cover(mp4_file,File.read(jpg_file))
                 File.delete(jpg_file)
-                Video.set_url(dbh,res[:file],url)
-                Video.add(dbh,res[:file])
+                Video.set_url(res[:file],url)
+                Video.add(res[:file])
                 FileUtils.mv(mp4_file,CONFIG[:ytdldestdir]+"/")
                 FileUtils.rm Dir.glob(File.join(CONFIG[:tmpdir],'*'))
             else
