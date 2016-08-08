@@ -20,7 +20,10 @@ else
 end
 
 def search(query)
-    PartyDB.search(CGI.unescapeHTML(query)).map{ |v|
+
+    PartyDB.search(CGI.unescapeHTML(query)).map{ |vv|
+        v=vv.to_hash
+        puts vv[:yid]+"/"+vv[:title]
         cover = Video.cover_to_b64(v[:file])
         if cover
             v.merge({:cover => "data:image/jpeg;base64,"+cover})
