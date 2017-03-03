@@ -20,7 +20,10 @@ else
 end
 
 def search(query)
-    @dbh.search(CGI.unescapeHTML(query)).map{ |v|
+
+    PartyDB.search(CGI.unescapeHTML(query)).map{ |vv|
+        v=vv.to_hash
+        puts vv[:yid]+"/"+vv[:title]
         cover = Video.cover_to_b64(v[:file])
         if cover
             v.merge({:cover => "data:image/jpeg;base64,"+cover})
@@ -31,7 +34,7 @@ def search(query)
 end
 
 def get10()
-    @dbh.get_rand(10).map{ |v|
+    PartyDB.get_rand(10).map{ |v|
         cover = Video.cover_to_b64(v[:file])
         if cover
             v.merge({:cover => "data:image/jpeg;base64,"+cover})
@@ -42,10 +45,6 @@ def get10()
 end
 
 $vlc = `pgrep vlc` != ""
-
-before  do
-    @dbh = PartyDB.new(CONFIG) 
-end
 
 get '/' do
     slim :main
@@ -61,7 +60,7 @@ end
 
 get '/insert_http' do
     url=@params[:url]
-    res=Video.download_url(@dbh,url)
+    res=Video.download_url(url)
     time=0
     if res[:status]!=0
         status 500
@@ -72,11 +71,11 @@ get '/insert_http' do
 end
 
 get '/reindex' do
-    Video.reindex(@dbh)
+    Video.reindex()
 end
 
 get '/pushpl' do
-    f = @dbh.get_file_from_id(@params[:id])
+    f = PartyDB.get_file_from_id(@params[:id])
     file=File.join(CONFIG[:ytdldestdir],f)
     if File.exist?(file)
         cmd="DISPLAY=:0 vlc --one-instance --playlist-enqueue \"#{file}\" 2>&1 > /dev/null"
@@ -91,7 +90,7 @@ end
 
 get '/dialog' do 
     vid = @params['id']
-    @res = @dbh.get_from_id(vid)
+    @res = PartyDB.get_from_id(vid)
     @res[:desription]= CGI.escapeHTML(@res[:description])
     slim :dialog
 end
@@ -99,6 +98,6 @@ end
 post '/changeinfo' do
     vid = @params[:id]
     text = @params[:data]
-    Video.set_comment(@dbh,vid,text)
+    Video.set_comment(vid,text)
     ""
 end

@@ -1,5 +1,5 @@
 CONFIG={
-    :dsn => "DBI:SQLite3:#{File.join(File.dirname(__FILE__),"..",'party.sqlite')}",
+#    :dsn => "DBI:SQLite3:#{File.join(File.dirname(__FILE__),"..",'party.sqlite')}",
     :http_host => "0.0.0.0",
     :tmpdir => "/tmp/ytdltmp",
     :ytdlcmd => "/usr/bin/youtube-dl",
