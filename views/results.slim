@@ -53,7 +53,7 @@ javascript:
             -if res.has_key?(:cover)
                 img src="#{res[:cover]}"  class="thumb"
         div class="link_title"
-            | #{res[:title]} <p style="margin-top:2px; margin-bottom:2px">#{res[:yid]}</p> <a href="/videos/#{res[:file]}">(Download file)</a>
+            | #{res[:title]} <p style="margin-top:2px; margin-bottom:2px">#{res[:yid]}</p> <a href="/videos/#{res[:file]}" download>(Download file)</a>
         -if $vlc
             div class="push_pl"
                 button class="addtopl"  data-lolid="#{res[:id]}" Push to current Playlist
