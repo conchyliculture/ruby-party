@@ -101,7 +101,10 @@ module Video
         TagLib::MP4::File.open(fmp4) do |mp4|
             cur_infos={}
             begin
-                cur_infos = JSON.parse(mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0])
+                cmt_tag = mp4.tag.item_list_map["\xC2\xA9cmt"]
+                if cmt_tag
+                    cur_infos = JSON.parse(cmt_tag.to_string_list[0])
+                end
             rescue JSON::ParserError => e
                 cur_infos[:description]=mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0]
             end
