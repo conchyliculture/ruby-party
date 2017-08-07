@@ -26,7 +26,13 @@ def get_json(f)
         puts url
         exit
     end
-    if res["pageInfo"]["totalResults"] ==1
+    if res["pageInfo"]["totalResults"] == 1
+        if res["items"]==[]
+            #Sometimes even with totalResults == 1, the video is still unavailable
+            $stderr.puts "Error with #{f}, video doesn't exist"
+            return
+        end
+
         title=res["items"][0]["snippet"]["title"]
         desc=res["items"][0]["snippet"]["description"]
         thumb_url=res["items"][0]["snippet"]["thumbnails"]["default"]["url"]
@@ -51,8 +57,8 @@ def get_json(f)
 end
 
 def update_meta(f)
-    puts f
     infos = get_json(f)
+    return unless infos
     Video.add_cmt(f,{"description"=> infos["desc"],
                     "url"=>"https://www.youtube.com/watch?v=#{infos['yid']}",
                     })
