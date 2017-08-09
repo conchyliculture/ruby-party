@@ -59,7 +59,7 @@ get '/lookup' do
 end
 
 get '/insert_http' do
-    url=@params[:url]
+    url=@params[:url].strip()
     res=Video.download_url(url)
     time=0
     if res[:status]!=0
