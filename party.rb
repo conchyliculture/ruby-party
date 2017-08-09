@@ -91,7 +91,7 @@ end
 get '/dialog' do 
     vid = @params['id']
     @res = PartyDB.get_from_id(vid)
-    @res[:desription]= CGI.escapeHTML(@res[:description])
+    @res[:desription]= CGI.escapeHTML(@res[:description] || "")
     slim :dialog
 end
 
