@@ -19,6 +19,8 @@ else
     set :port, CONFIG[:http_port] || 4567
 end
 
+$video_path = File.join(File.dirname(__FILE__), "public", "videos")
+
 def search(query)
 
     PartyDB.search(CGI.unescapeHTML(query)).map{ |vv|
@@ -100,4 +102,8 @@ post '/changeinfo' do
     text = @params[:data]
     Video.set_comment(vid,text)
     ""
+end
+
+get 'pl' do
+    slim :playlist
 end

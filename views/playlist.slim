@@ -1,0 +1,30 @@
+doctype html
+html
+    head
+        script src="/js/jquery-2.1.4.js"
+        title Playlist
+    body
+        javascript:
+            function changeSource(url) {
+                var video = document.getElementById('video');
+                video.src = url;
+                video.play();
+            };
+            function next() {
+                $.ajax({url: '/get1', success: function(data) {
+                    console.log(data);
+                    url = window.location.protocol+'//'+window.location.hostname+"/videos/"+data;
+                    console.log(url);
+                    changeSource(url);
+                }});
+            }
+        video id='video' width='1024px' height='768px' autoplay=true onended='next()' onerror='next()' controls=true
+            source type='video/mp4' 
+        javascript:
+            $(window).keypress(function (e) {
+                if (e.keyCode === 0 || e.keyCode === 32) {
+                    e.preventDefault();
+                    next();
+                }
+            });
+            $(document).ready(next());
