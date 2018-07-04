@@ -7,10 +7,9 @@ class PartyDB
         DB = Sequel.sqlite 'party.sqlite', :loggers => [Logger.new($stderr)]
     end
     Sequel::Model.plugin :force_encoding, 'UTF-8'
-    Sequel::Model.plugin(:schema)
 
-    class Infos < Sequel::Model(:infos)
-        set_schema do
+    unless DB.table_exists?(:infos)
+        DB.create_table :infos do
             primary_key :id
             String  :yid, :unique => true, :empty => false
             String  :title, :unique => false, :empty => true
@@ -19,7 +18,9 @@ class PartyDB
             String  :comment, :unique => false
             String  :url, :unique => false
         end
-        create_table unless table_exists?
+    end
+
+    class Infos < Sequel::Model(:infos)
     end
 
     def PartyDB.truncate()
