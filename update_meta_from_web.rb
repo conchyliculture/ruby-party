@@ -46,7 +46,7 @@ def get_json(f)
         puts "Desc : "
         desc = $stdin.gets().strip()
         cmd="ffmpeg -y -i \"#{f}\" -vframes 1 -f image2 \"/tmp/lol.jpg\""
-        pute=`#{cmd}`
+        `#{cmd}`
         return {"title"=>title,
                 "desc" => desc,
                 "yid" => yid,

@@ -1,4 +1,5 @@
 *.swp
+update_meta_from_web.rb
 *.sqlite
 lib/taglib*
 ssl

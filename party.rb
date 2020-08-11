@@ -19,8 +19,6 @@ else
     set :port, CONFIG[:http_port] || 4567
 end
 
-$video_path = File.join(File.dirname(__FILE__), "public", "videos")
-
 def search(query)
 
     PartyDB.search(CGI.unescapeHTML(query)).map{ |vv|
@@ -63,7 +61,6 @@ end
 get '/insert_http' do
     url=@params[:url].strip()
     res=Video.download_url(url)
-    time=0
     if res[:status]!=0
         status 500
     else
