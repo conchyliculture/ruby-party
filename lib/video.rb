@@ -14,7 +14,7 @@ module Video
     def Video.has_cover?(file)
         TagLib::MP4::File.open(File.join(CONFIG[:ytdldestdir],file)) do |mp4|
             break unless mp4.tag
-            c = mp4.tag.item_list_map['covr']
+            c = mp4.tag.item_map['covr']
             if c
                 cover_art_list=c.to_cover_art_list
                 cover_art = cover_art_list.first
@@ -32,7 +32,7 @@ module Video
         res=nil
         TagLib::MP4::File.open(File.join(CONFIG[:ytdldestdir],file)) do |mp4|
             break unless mp4.tag
-            c = mp4.tag.item_list_map['covr']
+            c = mp4.tag.item_map['covr']
             if c
                 cover_art_list=c.to_cover_art_list
                 cover_art = cover_art_list.first
@@ -49,7 +49,7 @@ module Video
 
     def Video.set_title(f,title)
         TagLib::MP4::File.open(f) do |mp4|
-            mp4.tag.item_list_map.insert("\xC2\xA9nam", TagLib::MP4::Item.from_string_list([title]))
+            mp4.tag.item_map.insert("\xC2\xA9nam", TagLib::MP4::Item.from_string_list([title]))
             mp4.save
         end
     end
@@ -64,14 +64,14 @@ module Video
         TagLib::MP4::File.open(f) do |mp4|
             break unless mp4.tag
             infos[:title]=mp4.tag.title 
-            if (mp4.tag.item_list_map["\xC2\xA9cmt"])
+            if (mp4.tag.item_map["\xC2\xA9cmt"])
                 begin
-                    lol = JSON.parse(mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0])
+                    lol = JSON.parse(mp4.tag.item_map["\xC2\xA9cmt"].to_string_list[0])
                     infos[:description] = lol["description"] 
                     infos[:comment] = lol["comment"] 
                     infos[:url] = lol["url"] 
                 rescue JSON::ParserError => e
-                    infos[:description] = mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0] 
+                    infos[:description] = mp4.tag.item_map["\xC2\xA9cmt"].to_string_list[0] 
                 end
             end
         end
@@ -92,7 +92,7 @@ module Video
         cover_art = TagLib::MP4::CoverArt.new(TagLib::MP4::CoverArt::JPEG, image_data)
         item = TagLib::MP4::Item.from_cover_art_list([cover_art])
         TagLib::MP4::File.open(fmp4) do |mp4|
-            mp4.tag.item_list_map.insert('covr', item)
+            mp4.tag.item_map.insert('covr', item)
             mp4.save
         end
     end
@@ -101,16 +101,16 @@ module Video
         TagLib::MP4::File.open(fmp4) do |mp4|
             cur_infos={}
             begin
-                cmt_tag = mp4.tag.item_list_map["\xC2\xA9cmt"]
+                cmt_tag = mp4.tag.item_map["\xC2\xA9cmt"]
                 if cmt_tag
                     cur_infos = JSON.parse(cmt_tag.to_string_list[0])
                 end
             rescue JSON::ParserError => e
-                cur_infos[:description]=mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0]
+                cur_infos[:description]=mp4.tag.item_map["\xC2\xA9cmt"].to_string_list[0]
             end
 
             cur_infos["url"]=url
-            mp4.tag.item_list_map.insert("\xC2\xA9cmt", TagLib::MP4::Item.from_string_list([JSON.dump(cur_infos)]))
+            mp4.tag.item_map.insert("\xC2\xA9cmt", TagLib::MP4::Item.from_string_list([JSON.dump(cur_infos)]))
             mp4.save
         end
     end
@@ -120,12 +120,12 @@ module Video
         TagLib::MP4::File.open(fmp4) do |mp4|
             cur_infos={}
             begin
-                cur_infos = JSON.parse(mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0])
+                cur_infos = JSON.parse(mp4.tag.item_map["\xC2\xA9cmt"].to_string_list[0])
             rescue JSON::ParserError => e
-                cur_infos[:description]=mp4.tag.item_list_map["\xC2\xA9cmt"].to_string_list[0]
+                cur_infos[:description]=mp4.tag.item_map["\xC2\xA9cmt"].to_string_list[0]
             end
             cur_infos["comment"]=cmt
-            mp4.tag.item_list_map.insert("\xC2\xA9cmt", TagLib::MP4::Item.from_string_list([JSON.dump(cur_infos)]))
+            mp4.tag.item_map.insert("\xC2\xA9cmt", TagLib::MP4::Item.from_string_list([JSON.dump(cur_infos)]))
             mp4.save
         end
         PartyDB.set_comment(vid,cmt)
@@ -133,7 +133,7 @@ module Video
 
     def Video.add_cmt(fmp4,infos)
         TagLib::MP4::File.open(fmp4) do |mp4|
-            mp4.tag.item_list_map.insert("\xC2\xA9cmt", TagLib::MP4::Item.from_string_list([JSON.dump(infos)]))
+            mp4.tag.item_map.insert("\xC2\xA9cmt", TagLib::MP4::Item.from_string_list([JSON.dump(infos)]))
             mp4.save
         end
     end
